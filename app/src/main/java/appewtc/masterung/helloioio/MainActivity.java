@@ -3,10 +3,13 @@ package appewtc.masterung.helloioio;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import ioio.lib.api.DigitalOutput;
 import ioio.lib.api.exception.ConnectionLostException;
 import ioio.lib.util.BaseIOIOLooper;
+import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOActivity;
 
 
@@ -56,15 +59,43 @@ public class MainActivity extends IOIOActivity{
 
 
     class Looper extends BaseIOIOLooper {
+
+        private DigitalOutput myOutput1, myOutput2, myOutput3, myOutput4, myOutput5, myOutput6;
+
         @Override
         protected void setup() throws ConnectionLostException, InterruptedException {
-            super.setup();
-        }
+//            super.setup();
+            myOutput1 = ioio_.openDigitalOutput(1, false);
+            myOutput2 = ioio_.openDigitalOutput(2, false);
+            myOutput3 = ioio_.openDigitalOutput(3, false);
+            myOutput4 = ioio_.openDigitalOutput(4, false);
+            myOutput5 = ioio_.openDigitalOutput(5, false);
+            myOutput6 = ioio_.openDigitalOutput(6, false);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(MainActivity.this, "Conneted IOIO", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }   // setup
 
         @Override
         public void loop() throws ConnectionLostException, InterruptedException {
-            super.loop();
-        }
+//            super.loop();
+            myOutput1.write(!toggleButton1.isChecked());
+            myOutput2.write(!toggleButton2.isChecked());
+            myOutput3.write(!toggleButton3.isChecked());
+            myOutput4.write(!toggleButton4.isChecked());
+            myOutput5.write(!toggleButton5.isChecked());
+            myOutput6.write(!toggleButton6.isChecked());
+        }   // loop
+    }   // Looper Class
+
+    protected IOIOLooper createIOIOLooper() {
+
+        return new Looper();
     }
 
 
